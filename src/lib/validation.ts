@@ -14,7 +14,8 @@ export const ChildUpdateInput = z.object({
 
 export const TranscribeInput = z.object({
   audioBase64: z.string().min(1),
-  mimeType: z.string().min(3).max(80).default('audio/m4a'),
+  mimeType: z.string().min(3).max(80).default('audio/mp4'),
+  fileName: z.string().min(3).max(80).optional(),
   choices: z.array(z.string().min(1).max(40)).min(1).max(6),
 });
 

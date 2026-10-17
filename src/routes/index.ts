@@ -167,6 +167,7 @@ export function createRoutes(db: Database) {
       const transcript = await transcribeAudio({
         audioBase64: parsed.data.audioBase64,
         mimeType: parsed.data.mimeType,
+        fileName: parsed.data.fileName,
       });
       const match = matchSpokenAnswer(transcript, parsed.data.choices);
 
