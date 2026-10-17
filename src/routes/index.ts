@@ -168,6 +168,7 @@ export function createRoutes(db: Database) {
         audioBase64: parsed.data.audioBase64,
         mimeType: parsed.data.mimeType,
         fileName: parsed.data.fileName,
+        choices: parsed.data.choices,
       });
       const match = matchSpokenAnswer(transcript, parsed.data.choices);
       console.log(

@@ -68,10 +68,22 @@ async function convertToWav(bytes: Buffer, sourceExtension: string): Promise<Buf
   }
 }
 
-async function whisperTranscribe(apiKey: string, bytes: Buffer, fileName: string, mimeType: string) {
+async function whisperTranscribe(
+  apiKey: string,
+  bytes: Buffer,
+  fileName: string,
+  mimeType: string,
+  choices?: string[],
+) {
   const form = new FormData();
   form.append('model', 'whisper-1');
   form.append('language', 'en');
+  if (choices?.length) {
+    form.append(
+      'prompt',
+      `Child quiz answer. Possible answers: ${choices.join(', ')}. Reply with one short answer.`,
+    );
+  }
   form.append('file', new File([new Uint8Array(bytes)], fileName, { type: mimeType }));
 
   const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
@@ -103,6 +115,7 @@ export async function transcribeAudio(input: {
   audioBase64: string;
   mimeType: string;
   fileName?: string;
+  choices?: string[];
 }) {
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) {
@@ -141,7 +154,7 @@ export async function transcribeAudio(input: {
   }
 
   try {
-    return await whisperTranscribe(apiKey, upload, fileName, mimeType);
+    return await whisperTranscribe(apiKey, upload, fileName, mimeType, input.choices);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     const isFormat =
@@ -152,7 +165,7 @@ export async function transcribeAudio(input: {
     if (isFormat) {
       console.error('[transcribe] retry via wav after', message);
       const wav = await convertToWav(bytes, detected.extension);
-      return await whisperTranscribe(apiKey, wav, 'answer.wav', 'audio/wav');
+      return await whisperTranscribe(apiKey, wav, 'answer.wav', 'audio/wav', input.choices);
     }
 
     console.error(
