@@ -170,6 +170,14 @@ export function createRoutes(db: Database) {
         fileName: parsed.data.fileName,
       });
       const match = matchSpokenAnswer(transcript, parsed.data.choices);
+      console.log(
+        '[transcribe] result',
+        JSON.stringify({
+          transcript,
+          match,
+          choices: parsed.data.choices,
+        }),
+      );
 
       res.json({
         transcript,

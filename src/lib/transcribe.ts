@@ -115,7 +115,7 @@ export async function transcribeAudio(input: {
   }
 
   const detected = detectAudioFormat(bytes);
-  console.error(
+  console.log(
     '[transcribe] received',
     `bytes=${bytes.length}`,
     `ext=${detected.extension}`,
@@ -132,7 +132,7 @@ export async function transcribeAudio(input: {
       upload = Buffer.from(await convertToWav(bytes, detected.extension));
       fileName = 'answer.wav';
       mimeType = 'audio/wav';
-      console.error('[transcribe] converted to wav', `bytes=${upload.length}`);
+      console.log('[transcribe] converted to wav', `bytes=${upload.length}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       console.error('[transcribe] ffmpeg', message);
