@@ -176,9 +176,11 @@ export function createRoutes(db: Database) {
       });
     } catch (error) {
       if (error instanceof Error) {
+        console.error('[transcribe]', error.message);
         res.status(502).json({ error: error.message });
         return;
       }
+      console.error('[transcribe]', error);
       next(error);
     }
   });
